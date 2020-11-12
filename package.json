@@ -24,5 +24,8 @@
   },
   "dependencies": {
     "stylus": "^0.54.8"
+  },
+  "devDependencies": {
+    "typescript": "^4.0.5"
   }
 }
