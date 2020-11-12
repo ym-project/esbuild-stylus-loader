@@ -26,6 +26,7 @@
     "stylus": "^0.54.8"
   },
   "devDependencies": {
+    "esbuild": "^0.8.6",
     "typescript": "^4.0.5"
   }
 }
