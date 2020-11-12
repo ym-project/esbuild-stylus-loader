@@ -21,5 +21,8 @@
   "main": "index.js",
   "engines": {
     "node": ">=8.6.0"
+  },
+  "dependencies": {
+    "stylus": "^0.54.8"
   }
 }
