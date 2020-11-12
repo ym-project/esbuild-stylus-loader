@@ -1,0 +1,25 @@
+{
+  "name": "esbuild-stylus-loader",
+  "version": "0.0.0",
+  "description": "esbuild plugin for stylus files",
+  "keywords": [
+    "esbuild",
+    "stylus"
+  ],
+  "author": {
+    "name": "ym-project",
+    "email": "ym-project@protonmail.com",
+    "url": "https://github.com/ym-project"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ym-project/esbuild-stylus-loader"
+  },
+  "homepage": "https://github.com/ym-project/esbuild-stylus-loader#readme",
+  "bugs": "https://github.com/ym-project/esbuild-stylus-loader/issues",
+  "license": "MIT",
+  "main": "index.js",
+  "engines": {
+    "node": ">=8.6.0"
+  }
+}
