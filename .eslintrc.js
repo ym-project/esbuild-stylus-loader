@@ -6,9 +6,11 @@ module.exports = {
 	extends: [
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
+		'plugin:ava/recommended',
 	],
 	plugins: [
 		'@typescript-eslint',
+		'ava',
 	],
 	env: {
 		node: true,
