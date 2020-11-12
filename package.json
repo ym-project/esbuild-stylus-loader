@@ -31,7 +31,8 @@
     "build:esm": "tsc --module ESNext --target ESNext --moduleResolution node --outDir npm/esm src/*",
     "rename-js-to-mjs": "for file in npm/esm/*.js; do mv $file npm/esm/`basename $file .js`.mjs; done",
     "build": "npm run clean && npm run build:cjs && npm run build:esm && npm run rename-js-to-mjs",
-    "clean": "rm -rf npm"
+    "clean": "rm -rf npm",
+    "lint": "eslint '**/*.{js,ts}'"
   },
   "dependencies": {
     "stylus": "^0.54.8"
