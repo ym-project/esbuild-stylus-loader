@@ -76,5 +76,11 @@ module.exports = {
 			'error',
 			'tab',
 		],
+		// disallow spaces between import {a} from ''
+		// const {a} = obj and others
+		'object-curly-spacing': [
+			'error',
+			'never',
+		],
 	},
 }
