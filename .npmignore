@@ -1,1 +1,6 @@
 src
+scripts
+test
+.eslintignore
+.eslintrc.js
+.huskyrc.js
