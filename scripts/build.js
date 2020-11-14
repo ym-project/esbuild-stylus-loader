@@ -7,6 +7,7 @@ const commonConfig = {
 		path.resolve(__dirname, '..', 'src', 'index.ts'),
 	],
 	bundle: true,
+	minify: true,
 	platform: 'node',
 	loader: {
 		'.ts': 'ts',
