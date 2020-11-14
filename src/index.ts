@@ -4,7 +4,7 @@ import {Plugin} from 'esbuild'
 import {LoaderOptions} from './types'
 import stylusToCss from './stylus-to-css'
 
-export default function esbuildStylusLoader(options: LoaderOptions = {}): Plugin {
+export function stylusLoader(options: LoaderOptions = {}): Plugin {
 	return {
 		name: 'stylus-loader',
 		setup(build) {
