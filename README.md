@@ -25,7 +25,7 @@ build({
     bundle: true,
     outdir: 'dist',
     plugins: [
-        stylusLoader()
+        stylusLoader.default()
     ],
 }).then(result => {})
 ```
