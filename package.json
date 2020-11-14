@@ -30,7 +30,8 @@
     "build": "node scripts/build",
     "clean": "node scripts/clean",
     "lint": "eslint '**/*.{js,ts}'",
-    "test": "ava"
+    "test": "ava",
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "stylus": "^0.54.8"
