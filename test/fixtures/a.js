@@ -1,3 +1,3 @@
-import './style.styl'
+import './a.styl'
 
 console.log('a.js file')
