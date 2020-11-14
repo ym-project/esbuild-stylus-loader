@@ -18,10 +18,10 @@
   "homepage": "https://github.com/ym-project/esbuild-stylus-loader#readme",
   "bugs": "https://github.com/ym-project/esbuild-stylus-loader/issues",
   "license": "MIT",
-  "main": "npm/cjs/index.js",
+  "main": "npm/cjs.js",
   "exports": {
-    "import": "./npm/esm/index.mjs",
-    "require": "./npm/cjs/index.js"
+    "import": "./npm/esm.mjs",
+    "require": "./npm/cjs.js"
   },
   "engines": {
     "node": ">=8.6.0"
