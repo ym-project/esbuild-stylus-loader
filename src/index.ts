@@ -22,10 +22,13 @@ export function stylusLoader(options: LoaderOptions = {}): Plugin {
 				namespace: 'stylus',
 			}, async args => {
 				const stylusContent = await fs.readFile(args.path, 'utf-8')
-				const cssContent = await stylusToCss(stylusContent, options.stylusOptions)
+				const {code} = await stylusToCss(stylusContent, {
+					stylusOptions: options.stylusOptions || {},
+					filePath: args.path,
+				})
 
 				return {
-					contents: cssContent,
+					contents: code,
 					loader: 'css',
 				}
 			})
