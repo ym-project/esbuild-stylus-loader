@@ -6,7 +6,7 @@
 		"module": "ESNext"
 	},
 	"include": [
-		"src",
+		"src"
 	],
 	"exclude": [
 		"node_modules",
