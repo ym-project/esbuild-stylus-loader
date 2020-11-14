@@ -2,7 +2,7 @@
 const {build} = require('esbuild')
 const test = require('ava')
 const path = require('path')
-const stylusPlugin = require('../npm/cjs')
+const {stylusLoader} = require('../npm/cjs')
 
 test('output files number should be 2', async t => {
 	const {outputFiles} = await build({
@@ -12,11 +12,8 @@ test('output files number should be 2', async t => {
 		bundle: true,
 		outdir: '.',
 		write: false,
-		loader: {
-			'.styl': 'file',
-		},
 		plugins: [
-			stylusPlugin.default(),
+			stylusLoader(),
 		],
 	})
 
@@ -31,11 +28,8 @@ test('output files should have .css and .js extensions', async t => {
 		bundle: true,
 		outdir: '.',
 		write: false,
-		loader: {
-			'.styl': 'file',
-		},
 		plugins: [
-			stylusPlugin.default(),
+			stylusLoader(),
 		],
 	})
 
