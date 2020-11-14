@@ -16,7 +16,7 @@ npm install esbuild-stylus-loader
 `esbuild-config.js`
 ```js
 const {build} = require('esbuild')
-const stylusLoader = require('esbuild-stylus-loader')
+const {stylusLoader} = require('esbuild-stylus-loader')
 
 build({
     entryPoints: [
@@ -25,7 +25,7 @@ build({
     bundle: true,
     outdir: 'dist',
     plugins: [
-        stylusLoader.default()
+        stylusLoader()
     ],
 }).then(result => {})
 ```
