@@ -43,7 +43,6 @@ export default function stylusToCss(content: string, options: StylusToCssOptions
 			inline sourcemaps are included to code already
 			*/
 
-			/* eslint-disable @typescript-eslint/ban-ts-comment */
 			// @ts-ignore
 			const externalSourcemapCode = styl.sourcemap
 
