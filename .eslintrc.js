@@ -17,6 +17,9 @@ module.exports = {
 		es2021: true,
 	},
 	rules: {
+		// allow @ts-ignore comment
+		'@typescript-eslint/ban-ts-comment': 'off',
+
 		// ignore rule because of @typescript-eslint/no-unused-vars
 		'no-unused-vars': 'off',
 
