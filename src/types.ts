@@ -1,15 +1,11 @@
 export interface LoaderOptions {
-	stylusOptions?: StylusOptions
-}
-
-/* eslint-disable @typescript-eslint/ban-types */
-export interface StylusOptions {
 	sourcemap?: 'inline'
-	use?: Array<(stylusInstance: object) => void>
+	use?: ((arg: any) => any)[]
 }
 
-/* eslint-disable @typescript-eslint/ban-types */
-export interface StylusToCss {
-	code: string,
-	sourcemap?: undefined | object
+export interface StylusToCssOptions {
+	stylusOptions: LoaderOptions
+	filePath: string
 }
+
+export type StylusToCss = Promise<string>

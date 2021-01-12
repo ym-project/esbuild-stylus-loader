@@ -22,8 +22,8 @@ export function stylusLoader(options: LoaderOptions = {}): Plugin {
 				namespace: 'stylus',
 			}, async args => {
 				const stylusContent = await fs.readFile(args.path, 'utf-8')
-				const {code} = await stylusToCss(stylusContent, {
-					stylusOptions: options.stylusOptions || {},
+				const code = await stylusToCss(stylusContent, {
+					stylusOptions: options,
 					filePath: args.path,
 				})
 

@@ -1,15 +1,10 @@
 import stylus from 'stylus'
 import {
-	StylusOptions,
+	StylusToCssOptions,
 	StylusToCss,
 } from './types'
 
-interface StylusToCssOptions {
-	stylusOptions: StylusOptions
-	filePath: string
-}
-
-export default function stylusToCss(content: string, options: StylusToCssOptions): Promise<StylusToCss> {
+export default function stylusToCss(content: string, options: StylusToCssOptions): StylusToCss {
 	return new Promise((resolve, reject) => {
 		const {
 			stylusOptions,
@@ -21,15 +16,13 @@ export default function stylusToCss(content: string, options: StylusToCssOptions
 
 		if (stylusOptions.sourcemap) {
 			if (stylusOptions.sourcemap === 'inline') {
-				styl.set('sourcemap', {
-					inline: true,
-				})
+				styl.set('sourcemap', {inline: true})
 			}
 		}
 
 		if (stylusOptions.use) {
-			stylusOptions.use.forEach(use => {
-				styl.use(use)
+			stylusOptions.use.forEach(usage => {
+				styl.use(usage)
 			})
 		}
 
@@ -38,18 +31,7 @@ export default function stylusToCss(content: string, options: StylusToCssOptions
 				return reject(err)
 			}
 
-			/*
-			styl.sourcemap needs only for external sourcemaps
-			inline sourcemaps are included to code already
-			*/
-
-			// @ts-ignore
-			const externalSourcemapCode = styl.sourcemap
-
-			resolve({
-				code: css,
-				sourcemap: externalSourcemapCode,
-			})
+			resolve(css)
 		})
 	})
 }
