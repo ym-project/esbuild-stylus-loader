@@ -60,3 +60,11 @@ test('test stylus use option', async t => {
 	const hasDefinedColor = outputFiles[1].text.includes(color)
 	t.true(hasDefinedColor)
 })
+
+test('test stylus sourcemap option', t => {
+	/*
+	Esbuild doesn't support css sourcemaps.
+	So this feature should be ignored for some time.
+	*/
+	t.pass()
+})
