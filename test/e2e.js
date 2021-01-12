@@ -68,3 +68,29 @@ test('test stylus sourcemap option', t => {
 	*/
 	t.pass()
 })
+
+test('test stylus import option', async t => {
+	const {outputFiles} = await build({
+		entryPoints: [
+			'./test/fixtures/b.js',
+		],
+		bundle: true,
+		outdir: '.',
+		write: false,
+		plugins: [
+			stylusLoader({
+				import: [
+					'/a',
+				],
+			}),
+		],
+	})
+
+	const hasImportedFileContent = outputFiles[1].text.includes(''.concat(
+		'* {\n',
+		'  margin: 0;\n',
+		'  padding: 0;\n',
+		'}'
+	))
+	t.true(hasImportedFileContent)
+})

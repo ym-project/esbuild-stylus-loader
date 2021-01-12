@@ -26,6 +26,12 @@ export default function stylusToCss(content: string, options: StylusToCssOptions
 			})
 		}
 
+		if (stylusOptions.import) {
+			stylusOptions.import.forEach(file => {
+				styl.import(file)
+			})
+		}
+
 		styl.render((err, css) => {
 			if (err) {
 				return reject(err)
