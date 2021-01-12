@@ -48,13 +48,11 @@ test('test stylus use option', async t => {
 		write: false,
 		plugins: [
 			stylusLoader({
-				stylusOptions: {
-					use: [
-						stylus => {
-							stylus.define('$myColor', color)
-						},
-					],
-				},
+				use: [
+					stylus => {
+						stylus.define('$myColor', color)
+					},
+				],
 			}),
 		],
 	})
