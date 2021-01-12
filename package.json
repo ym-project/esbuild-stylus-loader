@@ -37,15 +37,15 @@
     "stylus": "^0.54.8"
   },
   "devDependencies": {
-    "@types/node": "^14.14.7",
+    "@types/node": "^14.14.20",
     "@types/stylus": "^0.48.33",
-    "@typescript-eslint/eslint-plugin": "^4.7.0",
-    "@typescript-eslint/parser": "^4.7.0",
-    "ava": "^3.13.0",
-    "esbuild": "^0.8.7",
-    "eslint": "^7.13.0",
+    "@typescript-eslint/eslint-plugin": "^4.13.0",
+    "@typescript-eslint/parser": "^4.13.0",
+    "ava": "^3.15.0",
+    "esbuild": "^0.8.31",
+    "eslint": "^7.17.0",
     "eslint-plugin-ava": "^11.0.0",
-    "husky": "^4.3.0",
-    "typescript": "^4.0.5"
+    "husky": "^4.3.7",
+    "typescript": "^4.1.3"
   }
 }
