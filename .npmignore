@@ -4,3 +4,4 @@ test
 .eslintignore
 .eslintrc.js
 .huskyrc.js
+tsconfig.json
