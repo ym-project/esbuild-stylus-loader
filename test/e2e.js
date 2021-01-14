@@ -94,3 +94,28 @@ test('test stylus import option', async t => {
 	))
 	t.true(hasImportedFileContent)
 })
+
+test('test stylus define option', async t => {
+	const color = '#fff'
+	const {outputFiles} = await build({
+		entryPoints: [
+			'./test/fixtures/b.js',
+		],
+		bundle: true,
+		outdir: '.',
+		write: false,
+		plugins: [
+			stylusLoader({
+				define: [
+					[
+						'$myColor',
+						color,
+					],
+				],
+			}),
+		],
+	})
+
+	const hasDefinedColor = outputFiles[1].text.includes(color)
+	t.true(hasDefinedColor)
+})

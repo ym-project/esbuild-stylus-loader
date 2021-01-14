@@ -38,6 +38,12 @@ export default function stylusToCss(content: string, options: StylusToCssOptions
 			})
 		}
 
+		if (stylusOptions.define) {
+			stylusOptions.define.forEach(define => {
+				styl.define(define[0], define[1])
+			})
+		}
+
 		styl.render((err, css) => {
 			if (err) {
 				return reject(err)
