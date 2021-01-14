@@ -2,6 +2,7 @@ export interface LoaderOptions {
 	sourcemap?: 'inline'
 	use?: ((arg: any) => any)[]
 	import?: string[]
+	include?: string[]
 }
 
 export interface StylusToCssOptions {
