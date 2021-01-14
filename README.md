@@ -48,3 +48,23 @@ console.log('hello world')
 ```sh
 node ./esbuild-config.js
 ```
+
+## Arguments
+
+```js
+stylusLoader({
+    // https://stylus-lang.com/docs/js.html#includepath
+    include: [],
+
+    // https://stylus-lang.com/docs/js.html#importpath
+    import: [],
+
+    // https://stylus-lang.com/docs/js.html#usefn
+    use: [],
+
+    // https://stylus-lang.com/docs/js.html#definename-node
+    define: [],
+
+    sourcemap: 'inline'
+})
+```
