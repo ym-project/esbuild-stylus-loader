@@ -1,43 +1,39 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const {build} = require('esbuild')
 const path = require('path')
+const {dependencies} = require('../package.json')
+const DIST_FOLDER = 'npm'
 
 const commonConfig = {
 	entryPoints: [
 		path.resolve(__dirname, '..', 'src', 'index.ts'),
 	],
 	bundle: true,
-	minify: true,
 	platform: 'node',
 	loader: {
 		'.ts': 'ts',
 	},
-	external: [
-		'stylus',
-		'path',
-		'fs',
-	],
+	external: Object.entries(dependencies).map(([name]) => name),
 }
 
 function buildCjs() {
-	build({
+	return build({
 		...commonConfig,
-		outfile: path.resolve(__dirname, '..', 'npm', 'cjs.js'),
+		outfile: path.resolve(__dirname, '..', DIST_FOLDER, 'cjs.js'),
 		format: 'cjs',
-	}).then(() => {
-		console.log('CommonJS module was built')
 	})
 }
 
 function buildEsm() {
-	build({
+	return build({
 		...commonConfig,
-		outfile: path.resolve(__dirname, '..', 'npm', 'esm.mjs'),
+		outfile: path.resolve(__dirname, '..', DIST_FOLDER, 'esm.mjs'),
 		format: 'esm',
-	}).then(() => {
-		console.log('EcmaScript module was built')
 	})
 }
 
-buildCjs()
-buildEsm()
+Promise.resolve()
+	.then(() => buildCjs())
+	.then(() => console.log('CommonJS module was built'))
+	.then(() => buildEsm())
+	.then(() => console.log('EcmaScript module was built'))
