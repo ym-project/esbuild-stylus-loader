@@ -1,7 +1,9 @@
 src
 scripts
 test
+.commitlintrc.js
 .eslintignore
 .eslintrc.js
 .huskyrc.js
+.lintstagedrc.js
 tsconfig.json
