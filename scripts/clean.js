@@ -8,6 +8,4 @@ fs.promises
 		force: true,
 		recursive: true,
 	})
-	.then(() => {
-		console.log(`folder "${DIST_FOLDER}" was removed`)
-	})
+	.then(() => console.log(`folder "${DIST_FOLDER}" was removed`))
