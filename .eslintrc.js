@@ -54,13 +54,7 @@ module.exports = {
 		// require trailing comma only when entity has multiline format
 		'comma-dangle': [
 			'error',
-			{
-				arrays: 'always-multiline',
-				objects: 'always-multiline',
-				imports: 'always-multiline',
-				exports: 'always-multiline',
-				functions: 'never',
-			},
+			'always-multiline',
 		],
 		// disallow func( 'arg' ), only func('arg')
 		'space-in-parens': [
@@ -80,6 +74,7 @@ module.exports = {
 		'indent': [
 			'error',
 			'tab',
+			{SwitchCase: 1},
 		],
 		// disallow spaces between import {a} from ''
 		// const {a} = obj and others
@@ -87,5 +82,14 @@ module.exports = {
 			'error',
 			'never',
 		],
+		// disallow var keyword
+		'no-var': 'error',
+		// allow only strict equality "==="
+		'eqeqeq': [
+			'error',
+			'always',
+		],
+		// allow only camelCase names
+		camelcase: 'error',
 	},
 }
