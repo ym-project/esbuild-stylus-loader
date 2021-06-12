@@ -4,10 +4,10 @@ const test = require('ava')
 const path = require('path')
 const {stylusLoader} = require('../npm/cjs')
 
-test('output files number should be 2', async t => {
+test('Check stylus "@require" keyword. Should insert required file to bundled css file.', async t => {
 	const {outputFiles} = await build({
 		entryPoints: [
-			'./test/fixtures/a.js',
+			'./test/fixtures/require/entry.js',
 		],
 		bundle: true,
 		outdir: '.',
@@ -17,13 +17,18 @@ test('output files number should be 2', async t => {
 		],
 	})
 
-	t.is(outputFiles.length, 2)
+	t.truthy(outputFiles[1].path.includes('entry.css'))
+	t.truthy(outputFiles[1].text.includes(''.concat(
+		'.class {\n',
+		'  position: relative;\n',
+		'}',
+	)))
 })
 
-test('output files should have .css and .js extensions', async t => {
+test('Check stylus "@import" keyword with css file. Should be without changes.', async t => {
 	const {outputFiles} = await build({
 		entryPoints: [
-			'./test/fixtures/a.js',
+			'./test/fixtures/import-css/entry.js',
 		],
 		bundle: true,
 		outdir: '.',
@@ -33,89 +38,81 @@ test('output files should have .css and .js extensions', async t => {
 		],
 	})
 
-	t.is(path.extname(outputFiles[0].path), '.js')
-	t.is(path.extname(outputFiles[1].path), '.css')
+	t.truthy(outputFiles[1].path.includes('entry.css'))
+	t.truthy(outputFiles[1].text.includes('@import "./file.css";'))
 })
 
-test('test stylus use option', async t => {
-	const color = '#fff'
+// eslint-disable-next-line max-len
+test('Check stylus "@import" keyword with css file with "url" option. Should insert imported file to bundled css file.', async t => {
 	const {outputFiles} = await build({
 		entryPoints: [
-			'./test/fixtures/b.js',
+			'./test/fixtures/import-css/entry.js',
 		],
 		bundle: true,
 		outdir: '.',
 		write: false,
 		plugins: [
 			stylusLoader({
-				use: [
-					stylus => {
-						stylus.define('$myColor', color)
-					},
-				],
+				url: true,
 			}),
 		],
 	})
 
-	const hasDefinedColor = outputFiles[1].text.includes(color)
-	t.true(hasDefinedColor)
+	t.truthy(outputFiles[1].path.includes('entry.css'))
+	t.truthy(outputFiles[1].text.includes(''.concat(
+		'.class {\n',
+		'  width: 100%;\n',
+		'}',
+	)))
 })
 
-test('test stylus sourcemap option', t => {
-	/*
-	Esbuild doesn't support css sourcemaps.
-	So this feature should be ignored for some time.
-	*/
-	t.pass()
-})
-
-test('test stylus import option', async t => {
+test('Check "@font-face" url keyword with "url" option. Font file should be generated.', async t => {
 	const {outputFiles} = await build({
 		entryPoints: [
-			'./test/fixtures/b.js',
+			'./test/fixtures/font-face-src/entry.js',
 		],
 		bundle: true,
 		outdir: '.',
 		write: false,
 		plugins: [
 			stylusLoader({
-				import: [
-					'/a',
-				],
+				url: true,
 			}),
 		],
 	})
 
-	const hasImportedFileContent = outputFiles[1].text.includes(''.concat(
-		'* {\n',
-		'  margin: 0;\n',
-		'  padding: 0;\n',
-		'}'
-	))
-	t.true(hasImportedFileContent)
+	const fontFileName = path.basename(outputFiles[1].path)
+
+	t.truthy(outputFiles[1].path.includes(fontFileName))
+	t.truthy(outputFiles[2].path.includes('entry.css'))
+	t.truthy(outputFiles[2].text.includes(''.concat(
+		'@font-face {\n',
+		'  font-family: "Source-Sans-Pro";\n',
+		'  font-weight: 400;\n',
+		`  src: url(./${fontFileName}) format("truetype");\n`,
+		'}',
+	)))
 })
 
-test('test stylus define option', async t => {
-	const color = '#fff'
+test('Check "@font-face" url keyword. Should be without changes.', async t => {
 	const {outputFiles} = await build({
 		entryPoints: [
-			'./test/fixtures/b.js',
+			'./test/fixtures/font-face-src/entry.js',
 		],
 		bundle: true,
 		outdir: '.',
 		write: false,
 		plugins: [
-			stylusLoader({
-				define: [
-					[
-						'$myColor',
-						color,
-					],
-				],
-			}),
+			stylusLoader(),
 		],
 	})
 
-	const hasDefinedColor = outputFiles[1].text.includes(color)
-	t.true(hasDefinedColor)
+	t.truthy(outputFiles[1].path.includes('entry.css'))
+	t.truthy(outputFiles[1].text.includes(''.concat(
+		'@font-face {\n',
+		'  font-family: "Source-Sans-Pro";\n',
+		'  font-weight: 400;\n',
+		'  src: url(./regular.ttf) format("truetype");\n',
+		'}',
+	)))
 })
