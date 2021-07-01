@@ -42,62 +42,10 @@ test('Check stylus "@import" keyword with css file. Should be without changes.',
 	t.truthy(outputFiles[1].text.includes('@import "./file.css";'))
 })
 
-// eslint-disable-next-line max-len
-test('Check stylus "@import" keyword with css file with "url" option. Should insert imported file to bundled css file.', async t => {
+test('Check stylus "@import" keyword with stylus file. Should insert required file.', async t => {
 	const {outputFiles} = await build({
 		entryPoints: [
-			'./test/fixtures/import-css/entry.js',
-		],
-		bundle: true,
-		outdir: '.',
-		write: false,
-		plugins: [
-			stylusLoader({
-				url: true,
-			}),
-		],
-	})
-
-	t.truthy(outputFiles[1].path.includes('entry.css'))
-	t.truthy(outputFiles[1].text.includes(''.concat(
-		'.class {\n',
-		'  width: 100%;\n',
-		'}',
-	)))
-})
-
-test('Check "@font-face" url keyword with "url" option. Font file should be generated.', async t => {
-	const {outputFiles} = await build({
-		entryPoints: [
-			'./test/fixtures/font-face-src/entry.js',
-		],
-		bundle: true,
-		outdir: '.',
-		write: false,
-		plugins: [
-			stylusLoader({
-				url: true,
-			}),
-		],
-	})
-
-	const fontFileName = path.basename(outputFiles[1].path)
-
-	t.truthy(outputFiles[1].path.includes(fontFileName))
-	t.truthy(outputFiles[2].path.includes('entry.css'))
-	t.truthy(outputFiles[2].text.includes(''.concat(
-		'@font-face {\n',
-		'  font-family: "Source-Sans-Pro";\n',
-		'  font-weight: 400;\n',
-		`  src: url(./${fontFileName}) format("truetype");\n`,
-		'}',
-	)))
-})
-
-test('Check "@font-face" url keyword. Should be without changes.', async t => {
-	const {outputFiles} = await build({
-		entryPoints: [
-			'./test/fixtures/font-face-src/entry.js',
+			'./test/fixtures/import-stylus/entry.js',
 		],
 		bundle: true,
 		outdir: '.',
@@ -109,10 +57,69 @@ test('Check "@font-face" url keyword. Should be without changes.', async t => {
 
 	t.truthy(outputFiles[1].path.includes('entry.css'))
 	t.truthy(outputFiles[1].text.includes(''.concat(
-		'@font-face {\n',
-		'  font-family: "Source-Sans-Pro";\n',
-		'  font-weight: 400;\n',
-		'  src: url(./regular.ttf) format("truetype");\n',
+		'.class {\n',
+		'  width: auto;\n',
+		'}',
+	)))
+})
+
+test('Check "import" option. Should include imported files to bundle css file.', async t => {
+	const {outputFiles} = await build({
+		entryPoints: [
+			'./test/fixtures/import/entry.js',
+		],
+		bundle: true,
+		outdir: '.',
+		write: false,
+		plugins: [
+			stylusLoader({
+				stylusOptions: {
+					import: [
+						path.resolve(__dirname, 'fixtures', 'import', 'imported-file1.styl'),
+						path.resolve(__dirname, 'fixtures', 'import', 'imported-file2.styl'),
+					],
+				},
+			}),
+		],
+	})
+
+	t.truthy(outputFiles[1].path.includes('entry.css'))
+	t.truthy(outputFiles[1].text.includes(''.concat(
+		'.class1 {\n',
+		'  position: absolute;\n',
+		'}\n',
+		'.class2 {\n',
+		'  position: fixed;\n',
+		'}',
+	)))
+})
+
+test('Check "include" option. Nested imported file should be included to bundle file.', async t => {
+	const {outputFiles} = await build({
+		entryPoints: [
+			'./test/fixtures/include/entry.js',
+		],
+		bundle: true,
+		outdir: '.',
+		write: false,
+		plugins: [
+			stylusLoader({
+				stylusOptions: {
+					include: [
+						path.resolve(__dirname, 'fixtures', 'include', 'sub'),
+					],
+				},
+			}),
+		],
+	})
+
+	t.truthy(outputFiles[1].path.includes('entry.css'))
+	t.truthy(outputFiles[1].text.includes(''.concat(
+		'.class2 {\n',
+		'  width: 25%;\n',
+		'}\n',
+		'.class1 {\n',
+		'  width: 50%;\n',
 		'}',
 	)))
 })
