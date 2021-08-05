@@ -18,6 +18,16 @@ export default function stylusToCss(content: string, options: Options): Promise<
 			options.include.forEach(it => styl.include(it))
 		}
 
+		if (Array.isArray(options.define)) {
+			options.define.forEach(it => {
+				if (!Array.isArray(it) || (typeof it[0] !== 'string') || (it[1] === undefined)) {
+					return
+				}
+
+				styl.define(it[0], it[1], true)
+			})
+		}
+
 		styl.render((err, css) => {
 			if (err) {
 				return reject(err)

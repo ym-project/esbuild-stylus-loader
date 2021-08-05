@@ -5,4 +5,5 @@ export interface PluginOptions {
 export interface StylusOptions {
 	import?: string[]
 	include?: string[]
+	define?: ([string, any])[]
 }

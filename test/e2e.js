@@ -123,3 +123,36 @@ test('Check "include" option. Nested imported file should be included to bundle 
 		'}',
 	)))
 })
+
+test('Check "define" option.', async t => {
+	const domain1 = 'https://domain.com'
+	const domain2 = 'https://my-domain.com'
+	const {outputFiles} = await build({
+		entryPoints: [
+			'./test/fixtures/define/entry.js',
+		],
+		bundle: true,
+		outdir: '.',
+		write: false,
+		plugins: [
+			stylusLoader({
+				stylusOptions: {
+					define: [
+						['EXTERNAL_URL1', domain1],
+						['EXTERNAL_URL2', domain2],
+					],
+				},
+			}),
+		],
+	})
+
+	t.truthy(outputFiles[1].path.includes('entry.css'))
+	t.truthy(outputFiles[1].text.includes(''.concat(
+		'.class1 {\n',
+		`  background-image: url(${domain1});\n`,
+		'}\n',
+		'.class2 {\n',
+		`  background-image: url(${domain2});\n`,
+		'}',
+	)))
+})
