@@ -156,3 +156,39 @@ test('Check "define" option.', async t => {
 		'}',
 	)))
 })
+
+test('Check "use" option.', async t => {
+	const domain1 = 'https://domain.com'
+	const domain2 = 'https://my-domain.com'
+	const defineUrls = (stylus) => {
+		stylus.define('EXTERNAL_URL1', domain1)
+		stylus.define('EXTERNAL_URL2', domain2)
+	}
+	const {outputFiles} = await build({
+		entryPoints: [
+			'./test/fixtures/use/entry.js',
+		],
+		bundle: true,
+		outdir: '.',
+		write: false,
+		plugins: [
+			stylusLoader({
+				stylusOptions: {
+					use: [
+						defineUrls,
+					],
+				},
+			}),
+		],
+	})
+
+	t.truthy(outputFiles[1].path.includes('entry.css'))
+	t.truthy(outputFiles[1].text.includes(''.concat(
+		'.class1 {\n',
+		`  background-image: url(${domain1});\n`,
+		'}\n',
+		'.class2 {\n',
+		`  background-image: url(${domain2});\n`,
+		'}',
+	)))
+})

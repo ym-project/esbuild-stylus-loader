@@ -28,6 +28,10 @@ export default function stylusToCss(content: string, options: Options): Promise<
 			})
 		}
 
+		if (Array.isArray(options.use)) {
+			options.use.forEach(it => styl.use(it))
+		}
+
 		styl.render((err, css) => {
 			if (err) {
 				return reject(err)
