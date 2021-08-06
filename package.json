@@ -23,6 +23,7 @@
     "import": "./npm/esm.mjs",
     "require": "./npm/cjs.js"
   },
+  "types": "index.d.ts",
   "engines": {
     "node": ">=8.6.0"
   },
