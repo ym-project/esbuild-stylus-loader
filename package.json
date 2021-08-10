@@ -31,7 +31,7 @@
     "build": "node scripts/build",
     "clean": "node scripts/clean",
     "lint": "eslint '**/*.{js,ts}'",
-    "test": "ava",
+    "test": "ava --fail-fast -s --verbose",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
