@@ -8,6 +8,8 @@ export function stylusLoader(pluginOptions: PluginOptions = {}): Plugin {
 	return {
 		name: 'stylus-loader',
 		setup(build) {
+			const {sourcemap} = build.initialOptions
+
 			// intercept stylus files
 			build.onResolve({filter: /\.(styl|stylus)$/}, args => {
 				return {
@@ -40,6 +42,12 @@ export function stylusLoader(pluginOptions: PluginOptions = {}): Plugin {
 				const code = await stylusToCss(content, {
 					...pluginOptions.stylusOptions,
 					filePath: args.path,
+					sourcemap: (
+						sourcemap === true
+						|| sourcemap === 'inline'
+						|| sourcemap === 'external'
+						|| sourcemap === 'both'
+					),
 				})
 
 				return {

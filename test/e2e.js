@@ -192,3 +192,102 @@ test('Check "use" option.', async t => {
 		'}',
 	)))
 })
+
+test('Check css "inline" sourcemaps', async t => {
+	const {outputFiles} = await build({
+		entryPoints: [
+			'./test/fixtures/sourcemaps/entry.js',
+		],
+		bundle: true,
+		outdir: '.',
+		write: false,
+		sourcemap: 'inline',
+		plugins: [
+			stylusLoader(),
+		],
+	})
+
+	t.truthy(outputFiles[1].path.includes('entry.css'))
+	t.truthy(outputFiles[1].text.includes('/*# sourceMappingURL=data:application/json;base64,'))
+	// TODO: decode base64 and check content
+})
+
+test('Check css "external" sourcemaps', async t => {
+	const {outputFiles} = await build({
+		entryPoints: [
+			'./test/fixtures/sourcemaps/entry.js',
+		],
+		bundle: true,
+		outdir: '.',
+		write: false,
+		sourcemap: 'external',
+		plugins: [
+			stylusLoader(),
+		],
+	})
+
+	t.truthy(outputFiles[2].path.includes('entry.css.map'))
+	t.truthy(outputFiles[3].path.includes('entry.css'))
+
+	const sourcesContent = JSON.parse(outputFiles[2].text).sourcesContent[0]
+
+	t.truthy(sourcesContent.includes(''.concat(
+		'.class1\n',
+		'\tbackground-color transparent\n',
+		'\ttransition background-color .5s\n',
+		'\n',
+		'\t&-active\n',
+		'\t\tbackground-color #ff0000\n',
+	)))
+})
+
+test('Check css sourcemaps', async t => {
+	const {outputFiles} = await build({
+		entryPoints: [
+			'./test/fixtures/sourcemaps/entry.js',
+		],
+		bundle: true,
+		outdir: '.',
+		write: false,
+		sourcemap: true,
+		plugins: [
+			stylusLoader(),
+		],
+	})
+
+	t.truthy(outputFiles[2].path.includes('entry.css.map'))
+	t.truthy(outputFiles[3].path.includes('entry.css'))
+	t.truthy(outputFiles[3].text.includes('/*# sourceMappingURL=entry.css.map */'))
+})
+
+test('Check css "both" sourcemaps', async t => {
+	const {outputFiles} = await build({
+		entryPoints: [
+			'./test/fixtures/sourcemaps/entry.js',
+		],
+		bundle: true,
+		outdir: '.',
+		write: false,
+		sourcemap: 'both',
+		plugins: [
+			stylusLoader(),
+		],
+	})
+
+	t.truthy(outputFiles[2].path.includes('entry.css.map'))
+	t.truthy(outputFiles[3].path.includes('entry.css'))
+
+	const sourcesContent = JSON.parse(outputFiles[2].text).sourcesContent[0]
+
+	t.truthy(sourcesContent.includes(''.concat(
+		'.class1\n',
+		'\tbackground-color transparent\n',
+		'\ttransition background-color .5s\n',
+		'\n',
+		'\t&-active\n',
+		'\t\tbackground-color #ff0000\n',
+	)))
+
+	t.truthy(outputFiles[3].text.includes('/*# sourceMappingURL=data:application/json;base64,'))
+	// TODO: decode base64 and check content
+})

@@ -3,6 +3,7 @@ import {StylusOptions} from './types'
 
 interface Options extends StylusOptions {
 	filePath: string
+	sourcemap: boolean
 }
 
 export default function stylusToCss(content: string, options: Options): Promise<string> {
@@ -30,6 +31,13 @@ export default function stylusToCss(content: string, options: Options): Promise<
 
 		if (Array.isArray(options.use)) {
 			options.use.forEach(it => styl.use(it))
+		}
+
+		if (options.sourcemap) {
+			styl.set('sourcemap', {
+				comment: true,
+				inline: true,
+			})
 		}
 
 		styl.render((err, css) => {
