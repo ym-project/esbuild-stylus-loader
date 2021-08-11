@@ -1,19 +1,19 @@
 # esbuild-stylus-loader
-esbuild plugin for stylus files
 
-```
-⚠️ Because of esbuild plugin API is experimental yet, don't use it in production.
-When plugin API will be in stable stage this package will be have a major release. ⚠️
-```
+[Esbuild](https://esbuild.github.io/) plugin for [stylus](https://stylus-lang.com/) files.
 
-## Install
-```
+## Installation
+```sh
 npm install esbuild-stylus-loader
+```
+or
+```sh
+yarn add esbuild-stylus-loader
 ```
 
 ## Example
 
-`esbuild-config.js`
+`build.js`
 ```js
 const {build} = require('esbuild')
 const {stylusLoader} = require('esbuild-stylus-loader')
@@ -25,7 +25,13 @@ build({
     bundle: true,
     outdir: 'dist',
     plugins: [
-        stylusLoader()
+        stylusLoader({
+            stylusOptions: {
+                define: [
+                    ['BG_IMAGE', 'https://domain.com/image.jpeg'],
+                ],
+            },
+        })
     ],
 }).then(result => {})
 ```
@@ -33,38 +39,57 @@ build({
 `src/index.js`
 ```js
 import './style.styl'
-
 console.log('hello world')
 ```
 
 `src/style.styl`
 ```styl
-*
-    margin 0
-    padding 0
+html
+    background-image url(BG_IMAGE)
 ```
 
 `command line`
 ```sh
-node ./esbuild-config.js
+node ./build.js
 ```
 
 ## Arguments
 
 ```js
 stylusLoader({
-    // https://stylus-lang.com/docs/js.html#includepath
-    include: [],
+    stylusOptions: {
+        /**
+         * @see https://stylus-lang.com/docs/js.html#includepath
+         * @type {string[]}
+         */
+        include: ['./some/path'],
 
-    // https://stylus-lang.com/docs/js.html#importpath
-    import: [],
+        /**
+         * @see https://stylus-lang.com/docs/js.html#importpath
+         * @type {string[]}
+         */
+        import: [
+            path.resolve(__dirname, 'path'),
+            path.resolve(__dirname, 'another-path'),
+        ],
 
-    // https://stylus-lang.com/docs/js.html#usefn
-    use: [],
+        /**
+         * @see https://stylus-lang.com/docs/js.html#usefn
+         * @type {Function[]}
+         */
+        use: [
+            (stylus) => {
+                stylus.define('URL', 'domain.com')
+            },
+        ],
 
-    // https://stylus-lang.com/docs/js.html#definename-node
-    define: [],
-
-    sourcemap: 'inline'
+        /**
+         * @see https://stylus-lang.com/docs/js.html#definename-node
+         * @type {[string, any][]}
+         */
+        define: [
+            ['BG_IMAGE', 'https://domain.com/image.jpeg'],
+        ],
+    },
 })
 ```
