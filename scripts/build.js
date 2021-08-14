@@ -10,6 +10,7 @@ const commonConfig = {
 	],
 	bundle: true,
 	platform: 'node',
+	target: 'node10',
 	loader: {
 		'.ts': 'ts',
 	},
