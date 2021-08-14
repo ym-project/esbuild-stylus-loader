@@ -25,7 +25,7 @@ export default function stylusToCss(content: string, options: Options): Promise<
 					return
 				}
 
-				styl.define(it[0], it[1], true)
+				styl.define(it[0], it[1], it[2] || false)
 			})
 		}
 

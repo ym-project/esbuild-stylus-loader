@@ -85,10 +85,12 @@ stylusLoader({
 
         /**
          * @see https://stylus-lang.com/docs/js.html#definename-node
-         * @type {[string, any][]}
+         * @type {[string, any, boolean?][]}
          */
         define: [
             ['BG_IMAGE', 'https://domain.com/image.jpeg'],
+            /** The third argument allows to insert raw data */
+            ['BG_IMAGE', 'https://domain.com/image.jpeg', true],
         ],
     },
 })

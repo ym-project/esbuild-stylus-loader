@@ -7,7 +7,7 @@ interface PluginOptions {
 interface StylusOptions {
 	import?: string[]
 	include?: string[]
-	define?: ([string, any])[]
+	define?: ([string, any, boolean?])[]
 	use?: ((styl: any) => void)[]
 }
 
