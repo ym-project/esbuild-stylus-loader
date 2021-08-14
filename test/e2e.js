@@ -4,6 +4,15 @@ const test = require('ava')
 const path = require('path')
 const {stylusLoader} = require('../npm/cjs')
 
+function extractContentFromInlineSourcemap(str) {
+	const sourcemap = Buffer.from(
+		str.match(/\/\*# sourceMappingURL=data:application\/json;base64,(.*) \*\//)[1],
+		'base64',
+	).toString()
+	
+	return JSON.parse(sourcemap).sourcesContent[0]
+}
+
 test('Check stylus "@require" keyword. Should insert required file to bundled css file.', async t => {
 	const {outputFiles} = await build({
 		entryPoints: [
@@ -209,7 +218,14 @@ test('Check css "inline" sourcemaps', async t => {
 
 	t.truthy(outputFiles[1].path.includes('entry.css'))
 	t.truthy(outputFiles[1].text.includes('/*# sourceMappingURL=data:application/json;base64,'))
-	// TODO: decode base64 and check content
+	t.is(extractContentFromInlineSourcemap(outputFiles[1].text), ''.concat(
+		'.class1\n',
+		'\tbackground-color transparent\n',
+		'\ttransition background-color .5s\n',
+		'\n',
+		'\t&-active\n',
+		'\t\tbackground-color #ff0000\n',
+	))
 })
 
 test('Check css "external" sourcemaps', async t => {
@@ -289,5 +305,12 @@ test('Check css "both" sourcemaps', async t => {
 	)))
 
 	t.truthy(outputFiles[3].text.includes('/*# sourceMappingURL=data:application/json;base64,'))
-	// TODO: decode base64 and check content
+	t.is(extractContentFromInlineSourcemap(outputFiles[3].text), ''.concat(
+		'.class1\n',
+		'\tbackground-color transparent\n',
+		'\ttransition background-color .5s\n',
+		'\n',
+		'\t&-active\n',
+		'\t\tbackground-color #ff0000\n',
+	))
 })
