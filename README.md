@@ -92,6 +92,12 @@ stylusLoader({
             /** The third argument allows to insert raw data */
             ['BG_IMAGE', 'https://domain.com/image.jpeg', true],
         ],
+
+        /**
+         * Include css files.
+         * @type {boolean}
+        */
+       includeCss: false,
     },
 })
 ```

@@ -9,6 +9,7 @@ interface StylusOptions {
 	include?: string[]
 	define?: ([string, any, boolean?])[]
 	use?: ((styl: any) => void)[]
+	includeCss?: boolean
 }
 
 declare const stylusLoader: (options: PluginOptions) => Plugin

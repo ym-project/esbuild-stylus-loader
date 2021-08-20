@@ -51,7 +51,7 @@ test('Check stylus "@import" keyword with css file. Should be without changes.',
 	t.truthy(outputFiles[1].text.includes('@import "./file.css";'))
 })
 
-test('Check stylus "@import" keyword with stylus file. Should insert required file.', async t => {
+test('Check stylus "@import" keyword with stylus file. Should insert imported file.', async t => {
 	const {outputFiles} = await build({
 		entryPoints: [
 			'./test/fixtures/import-stylus/entry.js',
@@ -200,6 +200,52 @@ test('Check "use" option.', async t => {
 		`  background-image: url(${domain2});\n`,
 		'}',
 	)))
+})
+
+test('Check "includeCss" "true" option.', async t => {
+	const {outputFiles} = await build({
+		entryPoints: [
+			'./test/fixtures/import-css/entry.js',
+		],
+		bundle: true,
+		outdir: '.',
+		write: false,
+		plugins: [
+			stylusLoader({
+				stylusOptions: {
+					includeCss: true,
+				},
+			}),
+		],
+	})
+
+	t.truthy(outputFiles[1].path.includes('entry.css'))
+	t.truthy(outputFiles[1].text.includes(''.concat(
+		'.class {\n',
+		'  width: 100%;\n',
+		'}',
+	)))
+})
+
+test('Check "includeCss" "false" option.', async t => {
+	const {outputFiles} = await build({
+		entryPoints: [
+			'./test/fixtures/import-css/entry.js',
+		],
+		bundle: true,
+		outdir: '.',
+		write: false,
+		plugins: [
+			stylusLoader({
+				stylusOptions: {
+					includeCss: false,
+				},
+			}),
+		],
+	})
+
+	t.truthy(outputFiles[1].path.includes('entry.css'))
+	t.truthy(outputFiles[1].text.includes('@import "./file.css";'))
 })
 
 test('Check css "inline" sourcemaps', async t => {
