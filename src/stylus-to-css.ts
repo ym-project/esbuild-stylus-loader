@@ -33,6 +33,10 @@ export default function stylusToCss(content: string, options: Options): Promise<
 			options.use.forEach(it => styl.use(it))
 		}
 
+		if (options.includeCss) {
+			styl.set('include css', true)
+		}
+
 		if (options.sourcemap) {
 			styl.set('sourcemap', {
 				comment: true,
