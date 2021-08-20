@@ -94,10 +94,10 @@ stylusLoader({
         ],
 
         /**
-         * Include css files.
+         * Stylus will include css file content via @import "./file.css" keyword.
          * @type {boolean}
-        */
-       includeCss: false,
+         */
+        includeCss: false,
     },
 })
 ```
