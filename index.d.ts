@@ -12,5 +12,5 @@ interface StylusOptions {
 	includeCss?: boolean
 }
 
-declare const stylusLoader: (options: PluginOptions) => Plugin
+declare const stylusLoader: (options?: PluginOptions) => Plugin
 export {stylusLoader}
