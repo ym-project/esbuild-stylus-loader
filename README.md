@@ -4,11 +4,11 @@
 
 ## Installation
 ```sh
-npm install esbuild-stylus-loader
+npm install esbuild-stylus-loader stylus
 ```
 or
 ```sh
-yarn add esbuild-stylus-loader
+yarn add esbuild-stylus-loader stylus
 ```
 
 ## Example
