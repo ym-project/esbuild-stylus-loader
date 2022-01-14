@@ -1,8 +1,25 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const {build} = require('esbuild')
 const path = require('path')
-const {dependencies} = require('../package.json')
+const {
+	dependencies,
+	peerDependencies,
+} = require('../package.json')
 const DIST_FOLDER = 'npm'
+
+let external = []
+
+if (dependencies) {
+	Object.entries(dependencies)
+		.forEach(([name]) => external.push(name))
+}
+
+if (peerDependencies) {
+	Object.entries(peerDependencies)
+		.forEach(([name]) => external.push(name))
+}
+
+external = external.filter((value, index, self) => self.indexOf(value) === index)
 
 const commonConfig = {
 	entryPoints: [
@@ -14,7 +31,7 @@ const commonConfig = {
 	loader: {
 		'.ts': 'ts',
 	},
-	external: Object.entries(dependencies).map(([name]) => name),
+	external,
 }
 
 function buildCjs() {
