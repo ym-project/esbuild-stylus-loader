@@ -44,6 +44,7 @@ export function stylusLoader(pluginOptions: PluginOptions = {}): Plugin {
 					filePath: args.path,
 					sourcemap: (
 						sourcemap === true
+						|| sourcemap === 'linked'
 						|| sourcemap === 'inline'
 						|| sourcemap === 'external'
 						|| sourcemap === 'both'
