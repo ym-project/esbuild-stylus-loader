@@ -20,6 +20,7 @@ module.exports = {
 	rules: {
 		// allow @ts-ignore comment
 		'@typescript-eslint/ban-ts-comment': 'off',
+		'@typescript-eslint/no-explicit-any': 'off',
 
 		// ignore rule because of @typescript-eslint/no-unused-vars
 		'no-unused-vars': 'off',

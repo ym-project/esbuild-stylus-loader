@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
 const {build} = require('esbuild')
 const test = require('ava')
 const path = require('path')
