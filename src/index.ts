@@ -55,6 +55,7 @@ export function stylusLoader(pluginOptions: PluginOptions = {}): Plugin {
 					contents: code,
 					loader: 'css',
 					resolveDir: path.dirname(args.path),
+					watchFiles: [args.path],
 				}
 			})
 		},
