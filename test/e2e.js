@@ -6,10 +6,14 @@ import path from 'path'
 import {watch} from 'fs'
 import {mkdir, readFile, rm, writeFile, unlink} from 'fs/promises'
 import {stylusLoader} from '../npm/esm.mjs'
+import {fileURLToPath} from 'url'
 
 registerCompletionHandler(() => {
 	process.exit()
 })
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 function extractContentFromInlineSourcemap(str) {
 	const sourcemap = Buffer.from(
