@@ -1,10 +1,15 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-require-imports */
-const {build, context} = require('esbuild')
-const test = require('ava')
-const path = require('path')
-const {watch, promises: {mkdir, readFile, rm, writeFile, unlink}} = require('fs')
-const {stylusLoader} = require('../npm/cjs')
+import {build, context} from 'esbuild'
+import test, {registerCompletionHandler} from 'ava'
+import path from 'path'
+import {watch} from 'fs'
+import {mkdir, readFile, rm, writeFile, unlink} from 'fs/promises'
+import {stylusLoader} from '../npm/esm.mjs'
+
+registerCompletionHandler(() => {
+	process.exit()
+})
 
 function extractContentFromInlineSourcemap(str) {
 	const sourcemap = Buffer.from(
@@ -449,7 +454,7 @@ test('Check watch mode', async t => {
 		'\tposition relative',
 	))
 
-	const ctx = await context({
+	let ctx = await context({
 		entryPoints: [
 			'./test/temp.js',
 		],
