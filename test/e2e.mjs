@@ -1,9 +1,19 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-require-imports */
-const {build} = require('esbuild')
-const test = require('ava')
-const path = require('path')
-const {stylusLoader} = require('../npm/cjs')
+import {build, context} from 'esbuild'
+import test, {registerCompletionHandler} from 'ava'
+import path from 'path'
+import {watch} from 'fs'
+import {mkdir, readFile, rm, writeFile, unlink} from 'fs/promises'
+import {stylusLoader} from '../npm/esm.mjs'
+import {fileURLToPath} from 'url'
+
+registerCompletionHandler(() => {
+	process.exit()
+})
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 function extractContentFromInlineSourcemap(str) {
 	const sourcemap = Buffer.from(
@@ -12,6 +22,14 @@ function extractContentFromInlineSourcemap(str) {
 	).toString()
 	
 	return JSON.parse(sourcemap).sourcesContent[0]
+}
+
+function waitForChanges(path) {
+	return new Promise((resolve) => {
+		watch(path, () => {
+			resolve()
+		})
+	})
 }
 
 test('Check stylus "@require" keyword. Should insert required file to bundled css file.', async t => {
@@ -360,4 +378,134 @@ test('Check css "both" sourcemaps', async t => {
 		'\t&-active\n',
 		'\t\tbackground-color #ff0000\n',
 	))
+})
+
+test('Check rebuild mode', async t => {
+	// Create temporary file
+	await writeFile('./test/temp.js', 'import \'./temp.styl\'')
+	await writeFile('./test/temp.styl', ''.concat(
+		'.class\n',
+		'\tposition relative',
+	))
+
+	const ctx = await context({
+		entryPoints: [
+			'./test/temp.js',
+		],
+		bundle: true,
+		outdir: '.',
+		write: false,
+		plugins: [
+			stylusLoader(),
+		],
+	})
+
+	let {outputFiles} = await ctx.rebuild()
+
+	t.truthy(outputFiles[1].path.includes('temp.css'))
+	t.truthy(outputFiles[1].text.includes(''.concat(
+		'.class {\n',
+		'  position: relative;\n',
+		'}',
+	)))
+
+
+	// Update temporary file
+	await writeFile('./test/temp.styl', ''.concat(
+		'.class\n',
+		'\tposition fixed',
+	))
+
+	let result = await ctx.rebuild()
+	outputFiles = result.outputFiles
+
+	t.truthy(outputFiles[1].path.includes('temp.css'))
+	t.truthy(outputFiles[1].text.includes(''.concat(
+		'.class {\n',
+		'  position: fixed;\n',
+		'}',
+	)))
+
+	// Update temporary file
+	await writeFile('./test/temp.styl', ''.concat(
+		'.class\n',
+		'\tposition sticky',
+	))
+
+	result = await ctx.rebuild()
+	outputFiles = result.outputFiles
+
+	t.truthy(outputFiles[1].path.includes('temp.css'))
+	t.truthy(outputFiles[1].text.includes(''.concat(
+		'.class {\n',
+		'  position: sticky;\n',
+		'}',
+	)))
+
+	// Delete temporary files
+	await unlink('./test/temp.js')
+	await unlink('./test/temp.styl')
+})
+
+test('Check watch mode', async t => {
+	// Create temporary directory
+	await mkdir('./test/dist')
+
+	// Create temporary file
+	await writeFile('./test/temp.js', 'import \'./temp.styl\'')
+	await writeFile('./test/temp.styl', ''.concat(
+		'.class\n',
+		'\tposition relative',
+	))
+
+	let ctx = await context({
+		entryPoints: [
+			'./test/temp.js',
+		],
+		bundle: true,
+		outdir: './test/dist',
+		write: true,
+		plugins: [
+			stylusLoader(),
+		],
+	})
+
+	await ctx.watch()
+
+	// Update temporary file
+	await writeFile('./test/temp.styl', ''.concat(
+		'.class\n',
+		'\tposition fixed',
+	))
+
+	await waitForChanges('./test/dist')
+
+	let content = await readFile('./test/dist/temp.css', 'utf-8')
+	t.truthy(content.includes(''.concat(
+		'.class {\n',
+		'  position: fixed;\n',
+		'}',
+	)))
+
+	await writeFile('./test/temp.styl', ''.concat(
+		'.class\n',
+		'\tposition sticky',
+	))
+
+	await waitForChanges('./test/dist')
+
+	content = await readFile('./test/dist/temp.css', 'utf-8')
+	t.truthy(content.includes(''.concat(
+		'.class {\n',
+		'  position: sticky;\n',
+		'}',
+	)))
+
+	await ctx.dispose()
+
+	// Delete temporary files
+	await unlink('./test/temp.js')
+	await unlink('./test/temp.styl')
+	// Delete temporary directory
+	await rm('./test/dist', {force: true, recursive: true})
 })
