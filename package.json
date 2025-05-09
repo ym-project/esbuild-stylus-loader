@@ -1,6 +1,6 @@
 {
   "name": "esbuild-stylus-loader",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "esbuild plugin for stylus files",
   "keywords": [
     "esbuild",
