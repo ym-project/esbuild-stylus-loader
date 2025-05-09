@@ -487,6 +487,7 @@ test('Check watch mode', async t => {
 		'}',
 	)))
 
+	// Update temporary file again
 	await writeFile('./test/temp.styl', ''.concat(
 		'.class\n',
 		'\tposition sticky',
@@ -506,6 +507,155 @@ test('Check watch mode', async t => {
 	// Delete temporary files
 	await unlink('./test/temp.js')
 	await unlink('./test/temp.styl')
+	// Delete temporary directory
+	await rm('./test/dist', {force: true, recursive: true})
+})
+
+test('Check watch mode with imported files from javascript api', async t => {
+	// Create temporary directory
+	await mkdir('./test/dist')
+
+	// Create temporary file
+	await writeFile('./test/temp.js', 'import \'./temp.styl\'')
+	await writeFile('./test/temp.styl', ''.concat(
+		'.class\n',
+		'\tposition relative',
+	))
+	await writeFile('./test/temp-nested.styl', ''.concat(
+		'.class2\n',
+		'\tbackground-color #000',
+	))
+
+	let ctx = await context({
+		entryPoints: [
+			'./test/temp.js',
+		],
+		bundle: true,
+		outdir: './test/dist',
+		write: true,
+		plugins: [
+			stylusLoader({
+				stylusOptions: {
+					import: [
+						path.resolve(__dirname, 'temp-nested.styl'),
+					],
+				},
+			}),
+		],
+	})
+
+	await ctx.watch()
+
+	// Update imported file
+	await writeFile('./test/temp-nested.styl', ''.concat(
+		'.class2\n',
+		'\tbackground-color #fff',
+	))
+
+	await waitForChanges('./test/dist')
+
+	let content = await readFile('./test/dist/temp.css', 'utf-8')
+
+	t.truthy(content.includes(''.concat(
+		'.class2 {\n',
+		'  background-color: #fff;\n',
+		'}',
+	)))
+
+	// Update imported file again
+	await writeFile('./test/temp-nested.styl', ''.concat(
+		'.class2\n',
+		'\tbackground-color #111',
+	))
+
+	await waitForChanges('./test/dist')
+
+	content = await readFile('./test/dist/temp.css', 'utf-8')
+
+	t.truthy(content.includes(''.concat(
+		'.class2 {\n',
+		'  background-color: #111;\n',
+		'}',
+	)))
+
+	await ctx.dispose()
+
+	// Delete temporary files
+	await unlink('./test/temp.js')
+	await unlink('./test/temp.styl')
+	await unlink('./test/temp-nested.styl')
+	// Delete temporary directory
+	await rm('./test/dist', {force: true, recursive: true})
+})
+
+test('Check watch mode with imported files from code', async t => {
+	// Create temporary directory
+	await mkdir('./test/dist')
+
+	// Create temporary file
+	await writeFile('./test/temp.js', 'import \'./temp.styl\'')
+	await writeFile('./test/temp.styl', ''.concat(
+		'@import \'./temp-nested.styl\'\n',
+		'.class\n',
+		'\tposition relative',
+	))
+	await writeFile('./test/temp-nested.styl', ''.concat(
+		'.class2\n',
+		'\tbackground-color #000',
+	))
+
+	let ctx = await context({
+		entryPoints: [
+			'./test/temp.js',
+		],
+		bundle: true,
+		outdir: './test/dist',
+		write: true,
+		plugins: [
+			stylusLoader(),
+		],
+	})
+
+	await ctx.watch()
+
+	// Update imported file
+	await writeFile('./test/temp-nested.styl', ''.concat(
+		'.class2\n',
+		'\tbackground-color #fff',
+	))
+
+	await waitForChanges('./test/dist')
+
+	let content = await readFile('./test/dist/temp.css', 'utf-8')
+
+	t.truthy(content.includes(''.concat(
+		'.class2 {\n',
+		'  background-color: #fff;\n',
+		'}',
+	)))
+
+	// Update imported file again
+	await writeFile('./test/temp-nested.styl', ''.concat(
+		'.class2\n',
+		'\tbackground-color #111',
+	))
+
+	await waitForChanges('./test/dist')
+
+	content = await readFile('./test/dist/temp.css', 'utf-8')
+
+	t.truthy(content.includes(''.concat(
+		'.class2 {\n',
+		'  background-color: #111;\n',
+		'}',
+	)))
+
+	await ctx.dispose()
+
+	// Delete temporary files
+	await unlink('./test/temp.js')
+	await unlink('./test/temp.styl')
+	await unlink('./test/temp-nested.styl')
 	// Delete temporary directory
 	await rm('./test/dist', {force: true, recursive: true})
 })

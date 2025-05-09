@@ -39,7 +39,7 @@ export function stylusLoader(pluginOptions: PluginOptions = {}): Plugin {
 				namespace: 'stylus',
 			}, async args => {
 				const content = await fs.readFile(args.path, 'utf8')
-				const code = await stylusToCss(content, {
+				const {code, dependencyList} = await stylusToCss(content, {
 					...pluginOptions.stylusOptions,
 					filePath: args.path,
 					sourcemap: (
@@ -51,11 +51,14 @@ export function stylusLoader(pluginOptions: PluginOptions = {}): Plugin {
 					),
 				})
 
+				// Add current file to dependencyList
+				dependencyList.add(args.path)
+
 				return {
 					contents: code,
 					loader: 'css',
 					resolveDir: path.dirname(args.path),
-					watchFiles: [args.path],
+					watchFiles: Array.from(dependencyList),
 				}
 			})
 		},

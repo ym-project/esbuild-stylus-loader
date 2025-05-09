@@ -6,13 +6,25 @@ interface Options extends StylusOptions {
 	sourcemap: boolean
 }
 
-export default function stylusToCss(content: string, options: Options): Promise<string> {
+interface Result {
+	/** compiled css */
+	code: string
+	/** dependency list */
+	dependencyList: Set<string>
+}
+
+export default function stylusToCss(content: string, options: Options): Promise<Result> {
 	return new Promise((resolve, reject) => {
+		const dependencyList = new Set<string>()
 		const styl = stylus(content)
 		styl.set('filename', options.filePath)
 
 		if (Array.isArray(options.import)) {
-			options.import.forEach(it => styl.import(it))
+			options.import.forEach(it => {
+				styl.import(it)
+				// Add dependencies from  javascript api
+				dependencyList.add(it)
+			})
 		}
 
 		if (Array.isArray(options.include)) {
@@ -44,12 +56,20 @@ export default function stylusToCss(content: string, options: Options): Promise<
 			})
 		}
 
+		// Add dependencies from `@import` statements
+		for (const dependency of styl.deps()) {
+			dependencyList.add(dependency)
+		}
+
 		styl.render((err, css) => {
 			if (err) {
 				return reject(err)
 			}
 
-			resolve(css)
+			resolve({
+				code: css,
+				dependencyList,
+			})
 		})
 	})
 }
